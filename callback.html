@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>TikTok OAuth Callback</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 2rem;
+    }
+    .output {
+      background: #f3f3f3;
+      padding: 1rem;
+      border-radius: 8px;
+      margin-top: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>OAuth Redirect Handler</h1>
+  <p>Reading data from TikTok redirect...</p>
+  
+  <div class="output" id="output"></div>
+
+  <script>
+    // Lấy query parameters từ URL
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get("code");
+    const state = params.get("state");
+    const error = params.get("error");
+
+    const output = document.getElementById("output");
+
+    if (error) {
+      output.innerHTML = `<strong>Error:</strong> ${error}`;
+    } else if (code) {
+      output.innerHTML = `
+        <strong>Authorization Code:</strong> ${code}<br>
+        <strong>State:</strong> ${state || "N/A"}<br>
+        <p>Gửi mã này về server để lấy access token.</p>
+      `;
+    } else {
+      output.innerHTML = "Không tìm thấy code trong URL.";
+    }
+  </script>
+</body>
+</html>
