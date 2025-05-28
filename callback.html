@@ -39,38 +39,41 @@
       output.innerText = 'Không tìm thấy mã code trong URL.';
     }
 
-    async function fetchAccessToken(code) {
-      output.innerText = '📡 Đang lấy access_token...';
+   async function fetchAccessToken(code) {
+  output.innerText = '📡 Đang lấy access_token...';
 
-      try {
-        const response = await fetch('https://open.tiktokapis.com/v2/oauth/token/', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            client_key: 'sbaw9030ltl7ue429g',
-            client_secret: 'nEp9NLuH70I6XZzrLRGMURRWgmj2jXsN',
-            code,
-            grant_type: 'authorization_code',
-            redirect_uri: 'https://pmchau2510.github.io/tiktok-login-demo/callback.html',
-          }),
-        });
-        console.log('Response', response);
-        const data = await response.json();
-        console.log('Access Token Response:', data);
+  // Tạo body dạng form-urlencoded
+  const bodyData = new URLSearchParams({
+    client_key: clientKey,
+    client_secret: clientSecret,
+    code,
+    grant_type: 'authorization_code',
+    redirect_uri: redirectUri,
+  }).toString();
 
-        if (data.access_token) {
-          output.innerText = `✅ Access Token: ${data.access_token}\n🧠 OpenID: ${data.open_id}\n\nĐang lấy thông tin user...`;
+  try {
+    const response = await fetch('https://open.tiktokapis.com/v2/oauth/token/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: bodyData,
+    });
 
-          fetchUserInfo(data.access_token);
-        } else {
-          output.innerText = `⚠️ Không lấy được access_token:\n${JSON.stringify(data, null, 2)}`;
-        }
-      } catch (err) {
-        output.innerText = `Lỗi khi lấy token: ${err}`;
-      }
+    const data = await response.json();
+    console.log('Access Token Response:', data);
+
+    if (data.access_token) {
+      output.innerText = `✅ Access Token: ${data.access_token}\n🧠 OpenID: ${data.open_id}\n\nĐang lấy thông tin user...`;
+
+      fetchUserInfo(data.access_token);
+    } else {
+      output.innerText = `⚠️ Không lấy được access_token:\n${JSON.stringify(data, null, 2)}`;
     }
+  } catch (err) {
+    output.innerText = `Lỗi khi lấy token: ${err}`;
+  }
+}
 
     async function fetchUserInfo(accessToken) {
       try {
