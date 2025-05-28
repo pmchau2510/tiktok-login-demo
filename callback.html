@@ -49,14 +49,14 @@
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            client_key: clientKey,
-            client_secret: clientSecret,
+            client_key: 'sbaw9030ltl7ue429g',
+            client_secret: 'nEp9NLuH70I6XZzrLRGMURRWgmj2jXsN',
             code,
             grant_type: 'authorization_code',
-            redirect_uri: redirectUri,
+            redirect_uri: 'https://pmchau2510.github.io/tiktok-login-demo/callback.html',
           }),
         });
-
+        console.log('Response', response);
         const data = await response.json();
         console.log('Access Token Response:', data);
 
